@@ -1,10 +1,10 @@
-import React from "react";
-
 interface TimelineItemProps {
   index: number;
   title: string;
   description?: string;
   resources: string[];
+  completed: boolean;
+  onToggle?: () => void;
 }
 
 export default function TimelineItem({
@@ -12,6 +12,8 @@ export default function TimelineItem({
   title,
   description,
   resources,
+  completed,
+  onToggle,
 }: TimelineItemProps) {
   return (
     <div className="relative">
@@ -20,30 +22,46 @@ export default function TimelineItem({
         {index}
       </span>
 
-      {/* Content */}
       <div className="ml-4 space-y-2">
-        <h3 className="text-lg font-semibold">{title}</h3>
+        <div className="flex items-start gap-4">
+          <input
+            type="checkbox"
+            checked={completed}
+            onChange={onToggle}
+            className="mt-1 h-4 w-4 accent-blue-600 cursor-pointer"
+          />
 
-        {description && (
-          <p className="text-sm text-neutral-600">{description}</p>
-        )}
+          <div className="space-y-2">
+            <h3
+              className={`text-lg font-semibold ${
+                completed ? "line-through text-neutral-400" : ""
+              }`}
+            >
+              {title}
+            </h3>
 
-        {resources.length > 0 && (
-          <ul className="list-disc list-inside text-sm">
-            {resources.map((url) => (
-              <li key={url}>
-                <a
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
-                >
-                  {url}
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
+            {description && (
+              <p className="text-sm text-neutral-600">{description}</p>
+            )}
+
+            {resources.length > 0 && (
+              <ul className="list-disc list-inside text-sm">
+                {resources.map((url) => (
+                  <li key={url}>
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      {url}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

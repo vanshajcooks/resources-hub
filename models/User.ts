@@ -1,18 +1,9 @@
-import mongoose, { Schema, models, model } from "mongoose";
+import mongoose, { Schema, models } from "mongoose";
 
-export interface IUser {
-  name: string;
-  email: string;
-  image?: string;
-  role: "admin" | "user";
-}
-
-const UserSchema = new Schema<IUser>(
+const UserSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
-      trim: true,
     },
     email: {
       type: String,
@@ -20,17 +11,17 @@ const UserSchema = new Schema<IUser>(
       unique: true,
       lowercase: true,
     },
-    image: String,
+    password: {
+      type: String,
+      required: true,
+    },
     role: {
       type: String,
-      enum: ["admin", "user"],
+      enum: ["user", "admin"],
       default: "user",
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-const User = models.User || model<IUser>("User", UserSchema);
-export default User;
+export default models.User || mongoose.model("User", UserSchema);
