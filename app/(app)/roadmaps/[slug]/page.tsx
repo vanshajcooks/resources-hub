@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import dbConnect from "../../../../lib/db";
 import Roadmap from "../../../../models/Roadmap";
+import Timeline from "../../../../components/roadmap/Timeline";
+import TimelineItem from "../../../../components/roadmap/TimelineItem";
+
 
 interface RoadmapPageProps {
   params: Promise<{
@@ -28,46 +31,21 @@ export default async function RoadmapPage({ params }: RoadmapPageProps) {
         <p className="text-neutral-500 mt-2">{roadmap.domain}</p>
       </div>
 
-      {/* Steps */}
+      {/* Timeline */}
       <div className="space-y-4">
-        <h2 className="text-2xl font-semibold">Roadmap Steps</h2>
+        <h2 className="text-2xl font-semibold">Roadmap Timeline</h2>
 
-        <ol className="space-y-4">
+        <Timeline>
           {roadmap.steps.map((step: any, index: number) => (
-            <li key={step._id} className="border rounded-xl p-4">
-              <div className="flex items-start gap-4">
-                <span className="font-bold text-neutral-400">{index + 1}.</span>
-
-                <div>
-                  <h3 className="text-lg font-semibold">{step.title}</h3>
-
-                  {step.description && (
-                    <p className="text-sm text-neutral-600 mt-1">
-                      {step.description}
-                    </p>
-                  )}
-
-                  {step.resources.length > 0 && (
-                    <ul className="mt-2 list-disc list-inside text-sm">
-                      {step.resources.map((url: string) => (
-                        <li key={url}>
-                          <a
-                            href={url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:underline"
-                          >
-                            {url}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              </div>
-            </li>
+            <TimelineItem
+              key={step._id}
+              index={index + 1}
+              title={step.title}
+              description={step.description}
+              resources={step.resources}
+            />
           ))}
-        </ol>
+        </Timeline>
       </div>
     </div>
   );
