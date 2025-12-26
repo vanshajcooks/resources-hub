@@ -5,21 +5,22 @@ import path from "path";
 dotenv.config({
   path: path.resolve(process.cwd(), ".env.local"),
 });
-
 import bcrypt from "bcrypt";
 import dbConnect from "../lib/db";
 import User from "../models/User";
 
-async function createUser() {
+async function createAdmin() {
   await dbConnect();
 
-  const email = "vanshaj@test.com";
+  const email = "n@test.com";
   const password = "password123";
 
   // Check if user already exists
   const existing = await User.findOne({ email });
+
   if (existing) {
     console.log("❌ User already exists:", email);
+    console.log("Current role:", existing.role);
     process.exit(0);
   }
 
@@ -28,17 +29,17 @@ async function createUser() {
   await User.create({
     email,
     password: hashedPassword,
-    role: "user",
+    role: "admin",
   });
 
-  console.log("✅ User created successfully");
+  console.log("✅ Admin user created");
   console.log("Email:", email);
   console.log("Password:", password);
 
   process.exit(0);
 }
 
-createUser().catch((err) => {
+createAdmin().catch((err) => {
   console.error(err);
   process.exit(1);
 });
