@@ -3,6 +3,8 @@ import dbConnect from "../../../../lib/db";
 import Roadmap from "../../../../models/Roadmap";
 import Timeline from "../../../../components/roadmap/Timeline";
 import TimelineItem from "../../../../components/roadmap/TimelineItem";
+import AnimatedTimeline from "../../../../components/roadmap/AnimatedTimeline";
+
 
 
 interface RoadmapPageProps {
@@ -31,21 +33,23 @@ export default async function RoadmapPage({ params }: RoadmapPageProps) {
         <p className="text-neutral-500 mt-2">{roadmap.domain}</p>
       </div>
 
-      {/* Timeline */}
+      {/* Animated Timeline */}
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold">Roadmap Timeline</h2>
 
-        <Timeline>
-          {roadmap.steps.map((step: any, index: number) => (
-            <TimelineItem
-              key={step._id}
-              index={index + 1}
-              title={step.title}
-              description={step.description}
-              resources={step.resources}
-            />
-          ))}
-        </Timeline>
+        <AnimatedTimeline>
+          <Timeline>
+            {roadmap.steps.map((step: any, index: number) => (
+              <TimelineItem
+                key={step._id}
+                index={index + 1}
+                title={step.title}
+                description={step.description}
+                resources={step.resources}
+              />
+            ))}
+          </Timeline>
+        </AnimatedTimeline>
       </div>
     </div>
   );
