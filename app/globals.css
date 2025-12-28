@@ -1,5 +1,34 @@
 @import "tailwindcss";
 
+/* === Typography rhythm === */
+:root {
+  --ui-text-primary: rgb(245 245 245);
+  --ui-text-secondary: rgb(163 163 163);
+  --ui-text-muted: rgb(115 115 115);
+}
+
+/* Headings */
+.h1 {
+  @apply text-3xl md:text-4xl font-semibold tracking-tight;
+}
+
+.h2 {
+  @apply text-xl md:text-2xl font-medium tracking-tight;
+}
+
+.h3 {
+  @apply text-lg font-medium;
+}
+
+/* Body text */
+.body {
+  @apply text-sm text-neutral-300;
+}
+
+.muted {
+  @apply text-sm text-neutral-400;
+}
+
 /* ===============================
    GLOBAL RESET & DARK FOUNDATION
    =============================== */
@@ -53,4 +82,54 @@ button {
 /* Button reset */
 button {
   cursor: pointer;
+}
+
+/* === Micro-interactions === */
+
+/* Smooth color & shadow transitions */
+.ui-transition {
+  transition: color 200ms ease, background-color 200ms ease,
+    border-color 200ms ease, box-shadow 200ms ease,
+    transform 200ms ease;
+}
+
+/* Focus ring for keyboard users */
+.ui-focus {
+  outline: none;
+}
+
+.ui-focus:focus-visible {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08),
+    0 0 0 4px rgba(255, 255, 255, 0.04);
+}
+
+/* Click feedback */
+.ui-press:active {
+  transform: translateY(0.5px) scale(0.995);
+}
+
+
+/* === Skeleton === */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgb(38 38 38);
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.06),
+      transparent);
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
 }

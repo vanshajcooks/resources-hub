@@ -12,11 +12,10 @@ const ProgressSchema = new Schema(
       ref: "Roadmap",
       required: true,
     },
-    completedResources: [
-      {
-        type: Schema.Types.ObjectId,
-      },
-    ],
+    completedResources: {
+      type: [Schema.Types.ObjectId],
+      default: [],
+    },
   },
   { timestamps: true }
 );

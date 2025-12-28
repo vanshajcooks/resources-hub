@@ -12,26 +12,25 @@ export default function AnimatedTimeline({
 
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start 15%", "end 85%"],
+    offset: ["start 20%", "end 80%"],
   });
 
   return (
     <div ref={ref} className="relative">
-      {/* Static guide line (base) */}
+      {/* Base line */}
       <div
         aria-hidden
-        className="absolute left-[9px] top-0 h-full w-px bg-neutral-800"
+        className="absolute left-[12px] top-0 h-full w-px bg-neutral-800"
       />
 
-      {/* Progress indicator (subtle, animated) */}
+      {/* Animated progress line */}
       <motion.div
         aria-hidden
         style={{ scaleY: scrollYProgress }}
-        className="absolute left-[9px] top-0 h-full w-px bg-neutral-500 origin-top"
+        className="absolute left-[12px] top-0 h-full w-px bg-neutral-600 origin-top"
       />
 
-      {/* Timeline content */}
-      <div className="relative pl-6">{children}</div>
+      <div className="relative">{children}</div>
     </div>
   );
 }

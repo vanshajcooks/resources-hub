@@ -35,6 +35,15 @@ export default async function EditRoadmapPage({ params }: PageProps) {
  return (
    <div className="space-y-14">
      {/* Header */}
+     <div className="mb-6">
+       <a
+         href="/admin"
+         className="inline-flex items-center gap-2 text-sm text-neutral-500 hover:text-neutral-200 transition"
+       >
+         ← Back to Admin
+       </a>
+     </div>
+
      <header className="space-y-2">
        <h1 className="text-2xl font-semibold tracking-tight">Edit Roadmap</h1>
        <p className="text-sm text-neutral-400">

@@ -74,11 +74,27 @@ export default async function RoadmapPage({ params }: RoadmapPageProps) {
   // 🧱 UI
   return (
     <div className="space-y-12">
+      {/* Back */}
+      <div>
+        <a
+          href="/roadmaps"
+          className="inline-flex items-center gap-2 text-sm text-neutral-400 hover:text-neutral-200 transition"
+        >
+          ← Back to Roadmaps
+        </a>
+      </div>
+
       {/* Header */}
       <header className="space-y-3">
-        <h1 className="text-3xl font-semibold tracking-tight text-neutral-100">
-          {roadmap.title}
-        </h1>
+        <div className="flex items-center gap-3 flex-wrap">
+          <h1 className="h1 text-neutral-100">{roadmap.title}</h1>
+
+          {roadmapProgressPercent === 100 && (
+            <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
+              Completed
+            </span>
+          )}
+        </div>
 
         <div className="flex flex-wrap items-center gap-3 text-sm text-neutral-400">
           <span className="rounded-full border border-neutral-800 bg-neutral-900 px-3 py-1">
@@ -108,7 +124,7 @@ export default async function RoadmapPage({ params }: RoadmapPageProps) {
 
       {/* Timeline */}
       <section className="space-y-6">
-        <h2 className="text-lg font-medium text-neutral-200">Learning Path</h2>
+        <h2 className="h3 text-neutral-200">Learning Path</h2>
 
         <div className="rounded-xl border border-neutral-800 bg-neutral-900/50 p-6">
           <ProgressTimeline

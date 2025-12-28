@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 interface Resource {
   id: string;
   title: string;
@@ -17,106 +15,97 @@ interface Step {
 }
 
 interface TimelineItemProps {
-  step: Step;
   index: number;
+  step: Step;
   completedResources: string[];
   onToggleResource: (resourceId: string) => void;
 }
 
 export default function TimelineItem({
-  step,
   index,
+  step,
   completedResources,
   onToggleResource,
 }: TimelineItemProps) {
-  const [open, setOpen] = useState(false);
-
   const totalResources = step.resources.length;
-  const completedCount = step.resources.filter((r) =>
-    completedResources.includes(r.id)
-  ).length;
 
-  const percent =
-    totalResources === 0
-      ? 0
-      : Math.round((completedCount / totalResources) * 100);
+  const completedCount = step.resources.filter((res) =>
+    completedResources.includes(res.id)
+  ).length;
 
   const isCompleted = totalResources > 0 && completedCount === totalResources;
 
   return (
-    <div className="rounded-lg border border-neutral-800 bg-neutral-900/40">
-      {/* Topic Header */}
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between gap-4 px-4 py-3 text-left"
-      >
+    <div
+      className="
+        relative space-y-6 rounded-xl
+        border border-neutral-800
+        bg-neutral-900/40 p-6 ui-transition hover:border-neutral-700
+      "
+    >
+      {/* Step Header */}
+      <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">
-          <h3
-            className={`text-sm font-medium ${
-              isCompleted ? "text-neutral-400 line-through" : "text-neutral-100"
-            }`}
-          >
+          <h3 className="text-lg font-medium text-neutral-100">
             {index}. {step.title}
           </h3>
 
           {step.description && (
-            <p className="text-xs text-neutral-500">{step.description}</p>
+            <p className="text-sm text-neutral-400">{step.description}</p>
+          )}
+
+          {totalResources > 0 && (
+            <p className="text-xs text-neutral-500">
+              {completedCount} / {totalResources} resources completed
+            </p>
           )}
         </div>
 
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-neutral-400">
-            {completedCount}/{totalResources}
+        {isCompleted && (
+          <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
+            Completed
           </span>
-
-          <svg
-            className={`h-4 w-4 text-neutral-400 transition-transform ${
-              open ? "rotate-180" : ""
-            }`}
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fillRule="evenodd"
-              d="M5.23 7.21a.75.75 0 011.06.02L10 11.292l3.71-4.06a.75.75 0 111.1 1.02l-4.25 4.65a.75.75 0 01-1.1 0L5.21 8.27a.75.75 0 01.02-1.06z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </div>
-      </button>
+        )}
+      </div>
 
       {/* Resources */}
-      {open && (
-        <ul className="border-t border-neutral-800 px-4 py-3 space-y-2">
+      {step.resources.length > 0 && (
+        <ul className="space-y-4">
           {step.resources.map((res) => {
             const checked = completedResources.includes(res.id);
 
             return (
-              <li key={res.id} className="flex items-start gap-3 text-sm">
+              <li
+                key={res.id}
+                className="
+                  flex items-start gap-4
+                  rounded-lg
+                  border border-neutral-800
+                  bg-neutral-950/60 p-4 ui-transition hover:bg-neutral-900/70
+                "
+              >
                 <input
                   type="checkbox"
                   checked={checked}
                   onChange={() => onToggleResource(res.id)}
-                  className="mt-1 accent-neutral-200"
+                  className="mt-1 accent-neutral-200 ui-focus"
                 />
 
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs uppercase text-neutral-500">
-                    [{res.type}]
-                  </span>
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] uppercase tracking-wide text-neutral-500">
+                      {res.type}
+                    </span>
 
-                  <a
-                    href={res.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={`hover:underline ${
-                      checked
-                        ? "text-neutral-400 line-through"
-                        : "text-neutral-200"
-                    }`}
-                  >
-                    {res.title}
-                  </a>
+                    <a
+                      href={res.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm text-neutral-200 ui-transition hover:text-neutral-100"
+                    >
+                      {res.title}
+                    </a>
+                  </div>
                 </div>
               </li>
             );

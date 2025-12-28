@@ -1,104 +1,106 @@
-import { redirect } from "next/navigation";
-import Link from "next/link";
-
-import { auth } from "../../../auth";
 import dbConnect from "../../../lib/db";
 import Roadmap from "../../../models/Roadmap";
 import Progress from "../../../models/Progress";
+import Link from "next/link";
+import { auth } from "../../../auth";
 
 export default async function RoadmapsPage() {
   const session = await auth();
 
   if (!session) {
-    redirect("/login");
+    return null;
   }
 
   await dbConnect();
 
-  // 📘 Fetch all roadmaps
-  const roadmaps = await Roadmap.find({})
-    .select("title domain slug steps")
-    .lean();
-
-  // 📊 Fetch all progress for this user
+  const roadmaps = await Roadmap.find({}).lean();
   const progressDocs = await Progress.find({
     userId: session.user.id,
   }).lean();
 
-  // 🔁 Map progress by roadmapId for quick lookup
-  const progressMap = new Map(
+  // Map: roadmapId -> completedResources count
+  const progressMap = new Map<string, number>(
     progressDocs.map((p: any) => [
       p.roadmapId.toString(),
-      p.completedSteps.length,
+      p.completedResources?.length ?? 0,
     ])
   );
 
   return (
-    <div className="space-y-10">
-      {/* Header */}
+    <div className="space-y-8">
       <header className="space-y-2">
-        <h1 className="text-3xl font-semibold tracking-tight text-neutral-100">
-          Roadmaps
-        </h1>
-        <p className="text-neutral-400">
-          Track your learning progress across domains
-        </p>
+        <h1 className="h1 text-neutral-100">Roadmaps</h1>
+        <p className="muted">Track your learning progress across domains.</p>
       </header>
 
-      {/* Roadmap List */}
-      {roadmaps.length === 0 ? (
-        <p className="text-neutral-500">No roadmaps available.</p>
-      ) : (
-        <ul className="grid gap-6">
-          {roadmaps.map((roadmap: any) => {
-            const totalSteps = roadmap.steps.length;
-            const completedSteps = progressMap.get(roadmap._id.toString()) || 0;
+      <ul className="grid gap-4">
+        {roadmaps.map((roadmap: any) => {
+          const totalResources = roadmap.steps.reduce(
+            (acc: number, step: any) => acc + step.resources.length,
+            0
+          );
 
-            const percent =
-              totalSteps === 0
-                ? 0
-                : Math.round((completedSteps / totalSteps) * 100);
+          const completedResources =
+            progressMap.get(roadmap._id.toString()) ?? 0;
 
-            return (
-              <li
-                key={roadmap.slug}
-                className="rounded-xl border border-neutral-800 bg-neutral-900/50 p-6 space-y-4"
+          const percent =
+            totalResources === 0
+              ? 0
+              : Math.round((completedResources / totalResources) * 100);
+
+          return (
+            <li
+              key={roadmap._id.toString()}
+              className="group relative overflow-hidden rounded-xl border border-neutral-800 bg-gradient-to-b            ui-transition hover:-translate-y-[1px] hover:shadow-[0_10px_30px_-15px_rgba(0,0,0,0.6)]"
+            >
+              <Link
+                href={`/roadmaps/${roadmap.slug}`}
+                className="relative z-10 block space-y-5 ui-transition ui-focus ui-press"
               >
-                {/* Title */}
-                <div className="space-y-1">
-                  <h2 className="text-lg font-medium text-neutral-100">
-                    <Link
-                      href={`/roadmaps/${roadmap.slug}`}
-                      className="hover:underline"
-                    >
+                {/* Header */}
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-1">
+                    <h2 className="text-lg font-medium text-neutral-100">
                       {roadmap.title}
-                    </Link>
-                  </h2>
+                    </h2>
+                    <p className="text-sm text-neutral-400">{roadmap.domain}</p>
+                  </div>
 
-                  <p className="text-sm text-neutral-400">
-                    {roadmap.domain} • {totalSteps} steps
-                  </p>
+                  {percent === 100 && (
+                    <span className="shrink-0 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-400">
+                      Completed
+                    </span>
+                  )}
                 </div>
 
                 {/* Progress */}
                 <div className="space-y-2">
-                  <div className="flex justify-between text-xs text-neutral-400">
+                  <div className="flex justify-between text-xs text-neutral-500">
                     <span>Progress</span>
                     <span>{percent}%</span>
                   </div>
 
-                  <div className="h-1.5 w-full rounded-full bg-neutral-800">
+                  <div className="h-2 w-full rounded-full bg-neutral-800 overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-neutral-200 transition-all"
+                      className="h-full rounded-full bg-neutral-200 transition-all duration-300"
                       style={{ width: `${percent}%` }}
                     />
                   </div>
                 </div>
-              </li>
-            );
-          })}
-        </ul>
-      )}
+              </Link>
+
+              {/* Subtle hover glow */}
+              <div
+                className="
+    pointer-events-none absolute inset-0
+    opacity-0 transition group-hover:opacity-100
+    bg-[radial-gradient(400px_at_top_right,rgba(255,255,255,0.05),transparent)]
+  "
+              />
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
