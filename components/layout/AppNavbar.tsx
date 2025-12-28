@@ -35,8 +35,6 @@ export default function AppNavbar() {
         {/* Right */}
         <nav className="flex items-center gap-6">
           <NavLink href="/roadmaps" label="Roadmaps" />
-          <NavLink href="/profile" label="Profile" />
-
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
             className="text-sm text-neutral-400 hover:text-neutral-200 ui-transition ui-focus ui-press"

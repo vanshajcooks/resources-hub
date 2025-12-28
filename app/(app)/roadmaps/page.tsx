@@ -3,22 +3,26 @@ import Roadmap from "../../../models/Roadmap";
 import Progress from "../../../models/Progress";
 import Link from "next/link";
 import { auth } from "../../../auth";
+import { redirect } from "next/navigation";
 
 export default async function RoadmapsPage() {
+  // 🔐 Auth guard
   const session = await auth();
+  if (!session) redirect("/login");
 
-  if (!session) {
-    return null;
-  }
+  const userId = session.user.id;
 
   await dbConnect();
 
-  const roadmaps = await Roadmap.find({}).lean();
-  const progressDocs = await Progress.find({
-    userId: session.user.id,
-  }).lean();
+  // 📘 Fetch all roadmaps
+  const roadmaps = await Roadmap.find({})
+    .select("title domain slug steps")
+    .lean();
 
-  // Map: roadmapId -> completedResources count
+  // 📊 Fetch progress for this user
+  const progressDocs = await Progress.find({ userId }).lean();
+
+  // Map: roadmapId → completed resource count
   const progressMap = new Map<string, number>(
     progressDocs.map((p: any) => [
       p.roadmapId.toString(),
@@ -27,23 +31,30 @@ export default async function RoadmapsPage() {
   );
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
+      {/* Header */}
       <header className="space-y-2">
-        <h1 className="h1 text-neutral-100">Roadmaps</h1>
-        <p className="muted">Track your learning progress across domains.</p>
+        <h1 className="text-3xl font-semibold tracking-tight text-neutral-100">
+          Roadmaps
+        </h1>
+        <p className="text-neutral-400">
+          Track your learning progress across domains.
+        </p>
       </header>
 
+      {/* Roadmap Cards */}
       <ul className="grid gap-4">
         {roadmaps.map((roadmap: any) => {
+          // 🧮 Total resources in this roadmap
           const totalResources = roadmap.steps.reduce(
-            (acc: number, step: any) => acc + step.resources.length,
+            (acc: number, step: any) => acc + (step.resources?.length ?? 0),
             0
           );
 
           const completedResources =
             progressMap.get(roadmap._id.toString()) ?? 0;
 
-          const percent =
+          const progressPercent =
             totalResources === 0
               ? 0
               : Math.round((completedResources / totalResources) * 100);
@@ -51,11 +62,11 @@ export default async function RoadmapsPage() {
           return (
             <li
               key={roadmap._id.toString()}
-              className="group relative overflow-hidden rounded-xl border border-neutral-800 bg-gradient-to-b            ui-transition hover:-translate-y-[1px] hover:shadow-[0_10px_30px_-15px_rgba(0,0,0,0.6)]"
+              className="group relative overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900/60 transition hover:-translate-y-[1px] hover:shadow-[0_10px_30px_-15px_rgba(0,0,0,0.6)]"
             >
               <Link
                 href={`/roadmaps/${roadmap.slug}`}
-                className="relative z-10 block space-y-5 ui-transition ui-focus ui-press"
+                className="relative z-10 block space-y-5 p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-700"
               >
                 {/* Header */}
                 <div className="flex items-start justify-between gap-4">
@@ -66,7 +77,7 @@ export default async function RoadmapsPage() {
                     <p className="text-sm text-neutral-400">{roadmap.domain}</p>
                   </div>
 
-                  {percent === 100 && (
+                  {progressPercent === 100 && (
                     <span className="shrink-0 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-400">
                       Completed
                     </span>
@@ -77,25 +88,27 @@ export default async function RoadmapsPage() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-xs text-neutral-500">
                     <span>Progress</span>
-                    <span>{percent}%</span>
+                    <span>{progressPercent}%</span>
                   </div>
 
-                  <div className="h-2 w-full rounded-full bg-neutral-800 overflow-hidden">
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-neutral-800">
                     <div
                       className="h-full rounded-full bg-neutral-200 transition-all duration-300"
-                      style={{ width: `${percent}%` }}
+                      style={{ width: `${progressPercent}%` }}
                     />
                   </div>
+                </div>
+
+                {/* CTA */}
+                <div className="pt-1 text-sm font-medium text-neutral-300">
+                  {progressPercent > 0 ? "Continue →" : "Start →"}
                 </div>
               </Link>
 
               {/* Subtle hover glow */}
               <div
-                className="
-    pointer-events-none absolute inset-0
-    opacity-0 transition group-hover:opacity-100
-    bg-[radial-gradient(400px_at_top_right,rgba(255,255,255,0.05),transparent)]
-  "
+                aria-hidden
+                className="pointer-events-none absolute inset-0 opacity-0 transition group-hover:opacity-100 bg-[radial-gradient(400px_at_top_right,rgba(255,255,255,0.05),transparent)]"
               />
             </li>
           );

@@ -88,7 +88,17 @@ export default function TimelineItem({
                   type="checkbox"
                   checked={checked}
                   onChange={() => onToggleResource(res.id)}
-                  className="mt-1 accent-neutral-200 ui-focus"
+                  className="
+    mt-1 h-4 w-4
+    rounded border border-neutral-700
+    bg-neutral-900 text-neutral-200
+    accent-neutral-200
+    transition
+    hover:scale-105
+    focus:outline-none
+    focus:ring-2 focus:ring-neutral-700
+    disabled:opacity-50
+  "
                 />
 
                 <div className="flex flex-col gap-1">
