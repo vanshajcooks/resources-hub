@@ -1,6 +1,56 @@
 @import "tailwindcss";
 
+/* ===============================
+   GLOBAL RESET & DARK FOUNDATION
+   =============================== */
+
 html,
 body {
   height: 100%;
+  background-color: #0a0a0a;
+  /* neutral-950 */
+}
+
+/* Prevent white flash / default backgrounds */
+* {
+  border-color: rgb(38 38 38);
+  /* neutral-800 */
+}
+
+body {
+  color: rgb(245 245 245);
+  /* neutral-100 */
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Improve text rendering */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove default focus rings (we style manually) */
+:focus {
+  outline: none;
+}
+
+/* Links inherit color by default */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Forms reset */
+input,
+textarea,
+select,
+button {
+  background: none;
+  color: inherit;
+  font: inherit;
+}
+
+/* Button reset */
+button {
+  cursor: pointer;
 }

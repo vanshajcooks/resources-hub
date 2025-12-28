@@ -5,40 +5,44 @@ import dbConnect from "../lib/db";
 import Progress from "../models/Progress";
 import { revalidatePath } from "next/cache";
 
-export async function toggleStepCompletion(roadmapId: string, stepId: string) {
-  // 🔐 Get session on the server
+export async function toggleResourceCompletion(
+  roadmapId: string,
+  resourceId: string
+) {
   const session = await auth();
-
-  if (!session?.user?.id) {
+  if (!session) {
     throw new Error("Unauthorized");
   }
-
-  const userId = session.user.id;
 
   await dbConnect();
 
   let progress = await Progress.findOne({
-    userId,
+    userId: session.user.id,
     roadmapId,
   });
 
   if (!progress) {
-    progress = new Progress({
-      userId,
+    progress = await Progress.create({
+      userId: session.user.id,
       roadmapId,
-      completedSteps: [],
+      completedResources: [],
     });
   }
 
-  const isCompleted = progress.completedSteps.includes(stepId);
+  const alreadyCompleted = progress.completedResources.some(
+    (id: any) => id.toString() === resourceId
+  );
 
-  progress.completedSteps = isCompleted
-    ? progress.completedSteps.filter((id: string) => id !== stepId)
-    : [...progress.completedSteps, stepId];
+  if (alreadyCompleted) {
+    progress.completedResources = progress.completedResources.filter(
+      (id: any) => id.toString() !== resourceId
+    );
+  } else {
+    progress.completedResources.push(resourceId);
+  }
 
   await progress.save();
 
-  // 🔁 Refresh UI
-  revalidatePath("/roadmaps");
+  // 🔥 THIS FIXES THE SNAP-BACK
   revalidatePath(`/roadmaps/${roadmapId}`);
 }

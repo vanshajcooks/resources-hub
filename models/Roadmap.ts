@@ -1,10 +1,21 @@
 import mongoose, { Schema, models, model } from "mongoose";
 
+/* =======================
+   TypeScript Interfaces
+======================= */
+
+export interface IResource {
+  _id?: mongoose.Types.ObjectId;
+  title: string;
+  url: string;
+  type: "article" | "video" | "tool";
+}
+
 export interface IRoadmapStep {
-  _id: string;
+  _id?: mongoose.Types.ObjectId;
   title: string;
   description?: string;
-  resources: string[];
+  resources: IResource[];
 }
 
 export interface IRoadmap {
@@ -14,17 +25,53 @@ export interface IRoadmap {
   steps: IRoadmapStep[];
 }
 
+/* =======================
+   Resource Schema
+======================= */
+
+const ResourceSchema = new Schema<IResource>(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
+    type: {
+      type: String,
+      enum: ["article", "video", "tool"],
+      required: true,
+    },
+  },
+  { _id: true }
+);
+
+/* =======================
+   Step Schema
+======================= */
+
 const RoadmapStepSchema = new Schema<IRoadmapStep>(
   {
     title: {
       type: String,
       required: true,
     },
-    description: String,
-    resources: [String],
+    description: {
+      type: String,
+    },
+    resources: {
+      type: [ResourceSchema], // ✅ array of subdocuments
+      default: [],
+    },
   },
   { _id: true }
 );
+
+/* =======================
+   Roadmap Schema
+======================= */
 
 const RoadmapSchema = new Schema<IRoadmap>(
   {
@@ -43,7 +90,7 @@ const RoadmapSchema = new Schema<IRoadmap>(
     },
     steps: {
       type: [RoadmapStepSchema],
-      required: true,
+      default: [],
     },
   },
   {
@@ -52,4 +99,5 @@ const RoadmapSchema = new Schema<IRoadmap>(
 );
 
 const Roadmap = models.Roadmap || model<IRoadmap>("Roadmap", RoadmapSchema);
+
 export default Roadmap;

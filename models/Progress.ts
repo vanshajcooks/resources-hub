@@ -1,12 +1,6 @@
-import mongoose, { Schema, models, model } from "mongoose";
+import mongoose, { Schema, models } from "mongoose";
 
-export interface IProgress {
-  userId: mongoose.Types.ObjectId;
-  roadmapId: mongoose.Types.ObjectId;
-  completedSteps: string[];
-}
-
-const ProgressSchema = new Schema<IProgress>(
+const ProgressSchema = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -18,20 +12,15 @@ const ProgressSchema = new Schema<IProgress>(
       ref: "Roadmap",
       required: true,
     },
-    completedSteps: {
-      type: [String],
-      default: [],
-    },
+    completedResources: [
+      {
+        type: Schema.Types.ObjectId,
+      },
+    ],
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-// Prevent duplicate progress docs
 ProgressSchema.index({ userId: 1, roadmapId: 1 }, { unique: true });
 
-const Progress =
-  models.Progress || model<IProgress>("Progress", ProgressSchema);
-
-export default Progress;
+export default models.Progress || mongoose.model("Progress", ProgressSchema);

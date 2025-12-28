@@ -18,8 +18,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className="h-full bg-neutral-950 text-neutral-100">
+      <body
+        className={`${inter.variable} min-h-full bg-neutral-950 font-sans antialiased`}
+      >
         <Providers>{children}</Providers>
       </body>
     </html>

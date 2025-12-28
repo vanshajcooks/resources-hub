@@ -1,45 +1,50 @@
 "use client";
 
+import { useOptimistic, startTransition } from "react";
+
 import AnimatedTimeline from "./AnimatedTimeline";
 import Timeline from "./Timeline";
 import TimelineItem from "./TimelineItem";
-import { toggleStepCompletion } from "../../actions/progress";
-import { useOptimistic, startTransition } from "react";
+import { toggleResourceCompletion } from "../../actions/progress";
 
+interface Resource {
+  id: string;
+  title: string;
+  url: string;
+  type: "article" | "video" | "tool";
+}
 
 interface Step {
-  id: string; // ✅ now a plain string
+  id: string;
   title: string;
   description?: string;
-  resources: string[];
+  resources: Resource[];
 }
 
 interface ProgressTimelineProps {
   roadmapId: string;
   steps: Step[];
-  completedSteps: string[];
+  completedResources: string[];
 }
 
 export default function ProgressTimeline({
   roadmapId,
   steps,
-  completedSteps,
+  completedResources,
 }: ProgressTimelineProps) {
-  const [optimisticCompleted, toggleOptimistic] = useOptimistic(
-    completedSteps,
-    (state: string[], stepId: string) => {
-      return state.includes(stepId)
-        ? state.filter((id) => id !== stepId)
-        : [...state, stepId];
-    }
-  );
+  const [optimisticCompletedResources, toggleOptimisticResource] =
+    useOptimistic(completedResources, (state: string[], resourceId: string) =>
+      state.includes(resourceId)
+        ? state.filter((id) => id !== resourceId)
+        : [...state, resourceId]
+    );
 
-  async function onToggle(stepId: string) {
+  async function onToggleResource(resourceId: string) {
     startTransition(() => {
-      toggleOptimistic(stepId);
+      toggleOptimisticResource(resourceId);
     });
 
-    await toggleStepCompletion(roadmapId, stepId);
+    await toggleResourceCompletion(roadmapId, resourceId);
   }
 
   return (
@@ -47,13 +52,11 @@ export default function ProgressTimeline({
       <Timeline>
         {steps.map((step, index) => (
           <TimelineItem
-            key={step.id}
+            key={step.id} 
+            step={step}
             index={index + 1}
-            title={step.title}
-            description={step.description}
-            resources={step.resources}
-            completed={optimisticCompleted.includes(step.id)}
-            onToggle={() => onToggle(step.id)}
+            completedResources={optimisticCompletedResources}
+            onToggleResource={onToggleResource}
           />
         ))}
       </Timeline>
