@@ -26,7 +26,7 @@ export default async function RoadmapsPage() {
   const progressMap = new Map<string, number>(
     progressDocs.map((p: any) => [
       p.roadmapId.toString(),
-      p.completedResources?.length ?? 0,
+      Array.isArray(p.completedResources) ? p.completedResources.length : 0,
     ])
   );
 
@@ -45,9 +45,10 @@ export default async function RoadmapsPage() {
       {/* Roadmap Cards */}
       <ul className="grid gap-4">
         {roadmaps.map((roadmap: any) => {
-          // 🧮 Total resources in this roadmap
+          // 🧮 Total resources
           const totalResources = roadmap.steps.reduce(
-            (acc: number, step: any) => acc + (step.resources?.length ?? 0),
+            (acc: number, step: any) =>
+              acc + (Array.isArray(step.resources) ? step.resources.length : 0),
             0
           );
 
@@ -62,11 +63,18 @@ export default async function RoadmapsPage() {
           return (
             <li
               key={roadmap._id.toString()}
-              className="group relative overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900/60 transition hover:-translate-y-[1px] hover:shadow-[0_10px_30px_-15px_rgba(0,0,0,0.6)]"
+              className="
+                group relative overflow-hidden rounded-xl
+                border border-neutral-800 bg-neutral-900/60
+                transition hover:-translate-y-[1px]
+                hover:shadow-[0_10px_30px_-15px_rgba(0,0,0,0.6)]
+              "
             >
               <Link
                 href={`/roadmaps/${roadmap.slug}`}
-                className="relative z-10 block space-y-5 p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-700"
+                className="relative z-10 block space-y-5 p-5
+                           focus:outline-none focus-visible:ring-2
+                           focus-visible:ring-neutral-700"
               >
                 {/* Header */}
                 <div className="flex items-start justify-between gap-4">
@@ -108,7 +116,9 @@ export default async function RoadmapsPage() {
               {/* Subtle hover glow */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-0 opacity-0 transition group-hover:opacity-100 bg-[radial-gradient(400px_at_top_right,rgba(255,255,255,0.05),transparent)]"
+                className="pointer-events-none absolute inset-0
+                           opacity-0 transition group-hover:opacity-100
+                           bg-[radial-gradient(400px_at_top_right,rgba(255,255,255,0.05),transparent)]"
               />
             </li>
           );

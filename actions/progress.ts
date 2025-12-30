@@ -21,6 +21,7 @@ export async function toggleResourceCompletion(
     roadmapId,
   });
 
+  // Create progress doc if missing
   if (!progress) {
     progress = await Progress.create({
       userId: session.user.id,
@@ -29,13 +30,11 @@ export async function toggleResourceCompletion(
     });
   }
 
-  const alreadyCompleted = progress.completedResources.some(
-    (id: any) => id.toString() === resourceId
-  );
+  const alreadyCompleted = progress.completedResources.includes(resourceId);
 
   if (alreadyCompleted) {
     progress.completedResources = progress.completedResources.filter(
-      (id: any) => id.toString() !== resourceId
+      (id: string) => id !== resourceId
     );
   } else {
     progress.completedResources.push(resourceId);
@@ -43,6 +42,6 @@ export async function toggleResourceCompletion(
 
   await progress.save();
 
-  // 🔥 THIS FIXES THE SNAP-BACK
-  revalidatePath(`/roadmaps/${roadmapId}`);
+  // Revalidate roadmap page
+  revalidatePath(`/roadmaps`);
 }
