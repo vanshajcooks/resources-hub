@@ -25,7 +25,7 @@ async function seedUsers() {
     { username: "utkarsh", password: "utkarsh@joints3c", role: "admin" },
     { username: "arnav", password: "arnav@adm1n", role: "admin" },
     { username: "arpit", password: "arpit@adm1n", role: "admin" },
-    { username: "hashbit", password: "hashbit@adm1n", role: "admin" },
+    { username: "harshit", password: "harshit@adm1n", role: "admin" },
     { username: "khagendra", password: "khagendra@adm1n", role: "admin" },
     { username: "nidhish", password: "nidhish@adm1n", role: "admin" },
     { username: "mukul", password: "mukul@adm1n", role: "admin" },
