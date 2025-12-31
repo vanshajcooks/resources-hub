@@ -214,11 +214,6 @@ export const backendRoadmap = {
           type: "article",
           url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS",
         },
-        {
-          title: "Rate Limiting & Pagination",
-          type: "article",
-          url: "https://www.geeksforgeeks.org/rest-api-pagination/",
-        },
       ],
     },
 

@@ -25,11 +25,6 @@ export const cybersecurityRoadmap = {
           url: "https://nostarch.com/howlinuxworks3",
         },
         {
-          title: "Linux Bible — Christopher Negus",
-          type: "article",
-          url: "https://www.wiley.com/en-us/Linux+Bible%2C+9th+Edition-p-9781118999875",
-        },
-        {
           title: "Bread On Penguins (Linux Videos)",
           type: "video",
           url: "https://www.youtube.com/@BreadOnPenguins/",
@@ -95,11 +90,6 @@ export const cybersecurityRoadmap = {
           type: "article",
           url: "https://www.pearson.com/en-us/subject-catalog/p/computer-networks/P200000006265",
         },
-        {
-          title: "Networking Basics Explained",
-          type: "article",
-          url: "https://www.cloudflare.com/learning/network-layer/what-is-a-network/",
-        },
       ],
     },
 
@@ -124,11 +114,6 @@ export const cybersecurityRoadmap = {
           type: "article",
           url: "https://nostarch.com/seriouscrypto",
         },
-        {
-          title: "Cryptography Basics (Cloudflare)",
-          type: "article",
-          url: "https://www.cloudflare.com/learning/ssl/what-is-cryptography/",
-        },
       ],
     },
 
@@ -142,11 +127,6 @@ export const cybersecurityRoadmap = {
           title: "CompTIA Security+ Overview",
           type: "article",
           url: "https://www.comptia.org/certifications/security",
-        },
-        {
-          title: "Get Certified Get Ahead — Darril Gibson",
-          type: "article",
-          url: "https://getcertifiedgetahead.com/security/",
         },
       ],
     },
@@ -165,11 +145,6 @@ export const cybersecurityRoadmap = {
           title: "TryHackMe",
           type: "tool",
           url: "https://tryhackme.com/",
-        },
-        {
-          title: "Introduction to Ethical Hacking",
-          type: "article",
-          url: "https://www.geeksforgeeks.org/ethical-hacking/",
         },
       ],
     },

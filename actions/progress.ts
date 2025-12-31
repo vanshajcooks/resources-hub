@@ -9,39 +9,43 @@ export async function toggleResourceCompletion(
   roadmapId: string,
   resourceId: string
 ) {
-  const session = await auth();
-  if (!session) {
-    throw new Error("Unauthorized");
-  }
+  try {
+    const session = await auth();
+    if (!session) {
+      return { ok: false };
+    }
 
-  await dbConnect();
+    await dbConnect();
 
-  let progress = await Progress.findOne({
-    userId: session.user.id,
-    roadmapId,
-  });
-
-  // Create progress doc if missing
-  if (!progress) {
-    progress = await Progress.create({
+    let progress = await Progress.findOne({
       userId: session.user.id,
       roadmapId,
-      completedResources: [],
     });
+
+    if (!progress) {
+      progress = await Progress.create({
+        userId: session.user.id,
+        roadmapId,
+        completedResources: [],
+      });
+    }
+
+    const alreadyCompleted = progress.completedResources.includes(resourceId);
+
+    if (alreadyCompleted) {
+      progress.completedResources = progress.completedResources.filter(
+        (id: string) => id !== resourceId
+      );
+    } else {
+      progress.completedResources.push(resourceId);
+    }
+
+    await progress.save();
+
+    revalidatePath(`/roadmaps/${roadmapId}`);
+    return { ok: true };
+  } catch (err) {
+    console.error("Progress toggle failed:", err);
+    return { ok: false };
   }
-
-  const alreadyCompleted = progress.completedResources.includes(resourceId);
-
-  if (alreadyCompleted) {
-    progress.completedResources = progress.completedResources.filter(
-      (id: string) => id !== resourceId
-    );
-  } else {
-    progress.completedResources.push(resourceId);
-  }
-
-  await progress.save();
-
-  // Revalidate roadmap page
-  revalidatePath(`/roadmaps`);
 }

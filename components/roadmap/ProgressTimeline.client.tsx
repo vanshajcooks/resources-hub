@@ -40,11 +40,20 @@ export default function ProgressTimeline({
     );
 
   async function onToggleResource(resourceId: string) {
+    // 1️⃣ Optimistic update
     startTransition(() => {
       toggleOptimisticResource(resourceId);
     });
 
-    await toggleResourceCompletion(roadmapId, resourceId);
+    // 2️⃣ Server request
+    const result = await toggleResourceCompletion(roadmapId, resourceId);
+
+    // 3️⃣ Rollback if failed
+    if (!result?.ok) {
+      startTransition(() => {
+        toggleOptimisticResource(resourceId);
+      });
+    }
   }
 
   return (
@@ -52,7 +61,7 @@ export default function ProgressTimeline({
       <Timeline>
         {steps.map((step, index) => (
           <TimelineItem
-            key={step.id} 
+            key={step.id}
             step={step}
             index={index + 1}
             completedResources={optimisticCompletedResources}

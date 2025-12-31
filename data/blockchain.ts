@@ -20,11 +20,6 @@ export const blockchainRoadmap = {
           url: "https://ocw.mit.edu/courses/15-s12-blockchain-and-money-fall-2018/",
         },
         {
-          title: "Blockchain & Distributed Ledgers — Moataz Elmasry",
-          type: "article",
-          url: "https://www.amazon.in/Blockchain-Distributed-Ledgers-Technology-Financial/dp/1617297570",
-        },
-        {
           title: "Blockchain: Massively Simplified (TEDx)",
           type: "video",
           url: "https://www.youtube.com/watch?v=SSo_EIwHSd4",
@@ -42,11 +37,6 @@ export const blockchainRoadmap = {
           title: "Proof of Work vs Proof of Stake",
           type: "article",
           url: "https://ethereum.org/en/developers/docs/consensus-mechanisms/",
-        },
-        {
-          title: "Digital Signatures & Hashing",
-          type: "article",
-          url: "https://www.cloudflare.com/learning/ssl/what-is-cryptography/",
         },
         {
           title: "MetaMask Wallet & Security",
@@ -228,11 +218,6 @@ export const blockchainRoadmap = {
           type: "article",
           url: "https://docs.solana.com/developing",
         },
-        {
-          title: "Solana & Rust Roadmap (2025)",
-          type: "video",
-          url: "https://www.youtube.com/watch?v=Hc7E1yXzT0Y",
-        },
       ],
     },
 
@@ -255,11 +240,6 @@ export const blockchainRoadmap = {
           title: "Blockchain Articles on Medium",
           type: "article",
           url: "https://medium.com/techskill-brew",
-        },
-        {
-          title: "Blockchain in India (TEDx)",
-          type: "video",
-          url: "https://www.youtube.com/watch?v=U_lKZkK3E9I",
         },
       ],
     },

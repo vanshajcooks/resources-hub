@@ -154,11 +154,6 @@ export const aiMlRoadmap = {
           type: "video",
           url: "https://www.youtube.com/playlist?list=PLZoTAELRMXVPGU70ZGsckrMdr0FteeRUi",
         },
-        {
-          title: "ANN from Scratch (Kaggle)",
-          type: "tool",
-          url: "https://www.kaggle.com/code/khagendrasaini/ann-from-scratch",
-        },
       ],
     },
 

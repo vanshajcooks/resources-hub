@@ -39,11 +39,6 @@ export const frontendRoadmap = {
           type: "article",
           url: "https://developer.mozilla.org/en-US/docs/Glossary/Semantics",
         },
-        {
-          title: "Semantic Tags Explained",
-          type: "video",
-          url: "https://www.youtube.com/watch?v=Zf_v5BvP4G0",
-        },
       ],
     },
 
