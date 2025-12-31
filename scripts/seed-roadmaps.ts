@@ -12,22 +12,35 @@ import { advancedUIAnimationRoadmap } from "../data/advanced-ui-animation-roadma
 import { aiMlRoadmap } from "../data/ai-ml";
 import { blockchainRoadmap } from "../data/blockchain";
 import { cybersecurityRoadmap } from "../data/cybersec";
+import { backendRoadmap } from "../data/backend";
+import { appDevelopmentRoadmap } from "../data/apppdev";
+
+
 
 
 async function seed() {
   await dbConnect();
 
   await Roadmap.deleteOne({ slug: frontendRoadmap.slug });
+  await Roadmap.deleteOne({ slug: advancedUIAnimationRoadmap.slug });
+  await Roadmap.deleteOne({ slug: appDevelopmentRoadmap.slug });
+  await Roadmap.deleteOne({ slug: aiMlRoadmap.slug });
+  await Roadmap.deleteOne({ slug: blockchainRoadmap.slug });
+  await Roadmap.deleteOne({ slug: cybersecurityRoadmap.slug });
+  await Roadmap.deleteOne({ slug: backendRoadmap.slug });
+
 
   await Roadmap.create(frontendRoadmap);
   await Roadmap.create(advancedUIAnimationRoadmap);
   await Roadmap.create(aiMlRoadmap);
   await Roadmap.create(blockchainRoadmap);
   await Roadmap.create(cybersecurityRoadmap);
+  await Roadmap.create(backendRoadmap);
+  await Roadmap.create(appDevelopmentRoadmap);
 
 
 
-  console.log("✅ Frontend roadmap seeded successfully");
+  console.log("✅ roadmap seeded successfully");
   process.exit(0);
 }
 
