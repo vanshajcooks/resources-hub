@@ -4,22 +4,31 @@ export const authConfig = {
   pages: {
     signIn: "/login",
   },
+
+  session: {
+    strategy: "jwt",
+  },
+
   callbacks: {
     async jwt({ token, user }) {
-      // Runs when a JWT is created or updated
       if (user) {
+        token.username = (user as any).username;
         token.role = (user as any).role;
       }
       return token;
     },
+
     async session({ session, token }) {
-      // Make user id & role available on the client
-      if (session.user && token.sub) {
-        session.user.id = token.sub;
-        session.user.role = token.role as string;
+      if (session.user) {
+        session.user.id = token.sub!;
+        session.user.username = token.username as string;
+        const role = token.role as string | undefined;
+        const userRole: "user" | "admin" = role === "admin" ? "admin" : "user";
+        session.user.role = userRole;
       }
       return session;
     },
   },
-  providers: [], // IMPORTANT: providers are defined in auth.ts (Node runtime)
+
+  providers: [],
 } satisfies NextAuthConfig;

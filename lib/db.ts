@@ -1,4 +1,8 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+// 🔑 Explicitly load .env.local for CLI scripts
+dotenv.config({ path: ".env.local" });
 
 interface MongooseCache {
   conn: typeof mongoose | null;
@@ -34,12 +38,6 @@ export default async function dbConnect() {
     });
   }
 
-  try {
-    cached!.conn = await cached!.promise;
-  } catch (error) {
-    cached!.promise = null;
-    throw error;
-  }
-
+  cached!.conn = await cached!.promise;
   return cached!.conn;
 }

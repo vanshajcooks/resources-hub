@@ -13,26 +13,26 @@ import User from "../models/User";
 async function createUser() {
   await dbConnect();
 
-  const email = "vanshaj@test.com";
-  const password = "password123";
+  const username = "vanshaj";
+  const password = "admin123";
 
   // Check if user already exists
-  const existing = await User.findOne({ email });
+  const existing = await User.findOne({ username });
   if (existing) {
-    console.log("❌ User already exists:", email);
+    console.log("❌ User already exists:", username);
     process.exit(0);
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
   await User.create({
-    email,
+    username,
     password: hashedPassword,
-    role: "user",
+    role: "admin",
   });
 
   console.log("✅ User created successfully");
-  console.log("Email:", email);
+  console.log("Username:", username);
   console.log("Password:", password);
 
   process.exit(0);
